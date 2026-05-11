@@ -29,4 +29,18 @@ class ApiService {
       headers: await getHeaders(),
     );
   }
+
+  static Future<http.Response> delete(
+  String endpoint,
+) async {
+  final token = await Storage.getToken();
+
+  return await http.delete(
+    Uri.parse("$baseUrl$endpoint"),
+    headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+    },
+  );
+}
 }

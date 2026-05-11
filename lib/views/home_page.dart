@@ -23,236 +23,419 @@ class _HomePageState extends State<HomePage> {
     fetchProducts();
   }
 
-Future<void> fetchProducts() async {
-  try {
-    final data = await ProductController.getProducts();
-    setState(() {
-      products = data;
-      isLoading = false;
-    });
-  } catch (e) {
-    print("ERROR: $e");
-    setState(() {
-      isLoading = false;
-    });
+  Future<void> fetchProducts() async {
+    try {
+      final data = await ProductController.getProducts();
+
+      setState(() {
+        products = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("ERROR: $e");
+
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3E8FF),
-      appBar: AppBar(
-        title: const Text(
-          "Produk Saya",
-          style: TextStyle(
-            color: Color(0xFF6B4EFF),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: const Color(0xFFF3E8FF),
-        iconTheme: const IconThemeData(color: Color(0xFF6B4EFF)),
-        actions: [
-        PopupMenuButton(
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          icon: const Icon(
-            Icons.more_vert,
-            color: Color(0xFF6B4EFF),
-          ),
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'submit',
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.send_rounded,
-                    color: Color(0xFF8B5CF6),
-                    size: 20,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    "Submit Tugas",
-                    style: TextStyle(
-                      color: Color(0xFF4C3F91),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            PopupMenuItem(
-              value: 'logout',
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.logout_rounded,
-                    color: Colors.redAccent,
-                    size: 20,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    "Logout",
-                    style: TextStyle(
-                      color: Color(0xFF4C3F91),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          onSelected: (value) async {
-            if (value == 'submit') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const SubmitPage(),
-                ),
-              );
-            }
-
-            if (value == 'logout') {
-              await Storage.deleteToken();
-
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/',
-                (route) => false,
-              );
-            }
-          },
-        ),
-      ],
-      ),
-      body: isLoading
-          ? const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF8B5CF6),
-              ),
-            )
-          : Column(
+      backgroundColor: const Color(0xFF8B5CF6),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 60, 24, 20),
+            child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Hai, ${AuthController.userName}!",
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF6B4EFF),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hai, ${AuthController.userName}",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.9),
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          "Beranda",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Transform.translate(
+                      offset: const Offset(12, -12),
+                      child: IconButton(
+                        onPressed: () async {
+                          await Storage.deleteToken();
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            '/',
+                            (route) => false,
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.logout_rounded,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-                Expanded(
-                  child: RefreshIndicator(
-                    color: const Color(0xFF8B5CF6),
-                    onRefresh: () async {
-                      await fetchProducts();
-                    },
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final p = products[index];
-                        return Container(
-                          margin:
-                              const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 5),
-                              )
-                            ],
+
+                const SizedBox(height: 20),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const AddProductPage(),
+                            ),
+                          );
+
+                          fetchProducts();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF8B5CF6),
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 55,
-                                height: 55,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF3E8FF),
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                child: const Icon(
-                                  Icons.shopping_bag,
-                                  color: Color(0xFF8B5CF6),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      p.name,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        color: Color(0xFF4C3F91),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      p.description,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      "Rp ${p.price}",
-                                      style: const TextStyle(
-                                        color: Color(0xFF8B5CF6),
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                        ),
+                        child: const Text(
+                          "Tambah Produk",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
-                  ),
+
+                    const SizedBox(width: 12),
+
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SubmitPage(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF8B5CF6),
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: const Text(
+                          "Submit",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF8B5CF6),
-        elevation: 6,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(45),
-        ),
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const AddProductPage(),
+          ),
+
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 20),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF8B5CF6),
+                      ),
+                    )
+                  : RefreshIndicator(
+                      color: const Color(0xFF8B5CF6),
+                      onRefresh: () async {
+                        await fetchProducts();
+                      },
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 4,
+                        ),
+                        itemCount: products.length,
+                        itemBuilder: (context, index) {
+                          final p = products[index];
+
+                          return GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(24),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(30),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                child: Container(
+                                                  width: 50,
+                                                  height: 5,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[300],
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              Align(
+                                                alignment: Alignment.topRight,
+                                                child: IconButton(
+                                                    padding: EdgeInsets.zero,
+                                                    constraints: const BoxConstraints(),
+                                                    splashRadius: 20,
+                                                    onPressed: () async {
+                                                      bool? confirm = await showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            backgroundColor: Colors.white,
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(20),
+                                                            ),
+                                                            title: const Text(
+                                                              "Hapus Produk",
+                                                              style: TextStyle(
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Color(0xFF4C3F91),
+                                                              ),
+                                                            ),
+                                                            content: const Text(
+                                                              "Yakin ingin menghapus produk ini?",
+                                                            ),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(context, false);
+                                                                },
+                                                                child: const Text(
+                                                                  "Batal",
+                                                                  style: TextStyle(
+                                                                    color: Colors.grey,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              ElevatedButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(context, true);
+                                                                },
+                                                                style: ElevatedButton.styleFrom(
+                                                                  backgroundColor: Colors.redAccent,
+                                                                  elevation: 0,
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(12),
+                                                                  ),
+                                                                ),
+                                                                child: const Text(
+                                                                  "Hapus",
+                                                                  style: TextStyle(
+                                                                    color: Colors.white,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+
+                                                      if (confirm == true) {
+                                                        bool success =
+                                                            await ProductController.deleteProduct(p.id!);
+
+                                                        Navigator.pop(context);
+
+                                                        if (success) {
+                                                          fetchProducts();
+
+                                                          ScaffoldMessenger.of(context).showSnackBar(
+                                                            const SnackBar(
+                                                              content: Text("Produk berhasil dihapus"),
+                                                            ),
+                                                          );
+                                                        }
+                                                      }
+                                                    },
+                                                  icon: const Icon(
+                                                    Icons.delete_outline_rounded,
+                                                    color: Colors.redAccent,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 24),
+
+                                        Text(
+                                          p.name,
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            color: Color(0xFF4C3F91),
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 12),
+
+                                        Text(
+                                          "Rp ${p.price}",
+                                          style: const TextStyle(
+                                            color: Color(0xFF8B5CF6),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 20),
+
+                                        Text(
+                                          p.description,
+                                          style: TextStyle(
+                                            color: Colors.grey[700],
+                                            fontSize: 15,
+                                            height: 1.5,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 30),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 14),
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFF8B5CF6).withOpacity(0.12),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 52,
+                                    height: 52,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF3E8FF),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: const Icon(
+                                      Icons.shopping_bag_rounded,
+                                      color: Color(0xFF8B5CF6),
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 14),
+
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          p.name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            color: Color(0xFF4C3F91),
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 4),
+
+                                        Text(
+                                          p.description,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 13,
+                                          ),
+                                        ),
+
+                                        const SizedBox(height: 8),
+
+                                        Text(
+                                          "Rp ${p.price}",
+                                          style: const TextStyle(
+                                            color: Color(0xFF8B5CF6),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
             ),
-          );
-          fetchProducts();
-        },
-        child: const Icon(Icons.add, size: 28, color: Colors.white),
+          ),
+        ],
       ),
     );
   }

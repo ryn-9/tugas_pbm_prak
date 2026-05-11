@@ -39,4 +39,13 @@ class ProductController {
 
     return response.statusCode == 200 || response.statusCode == 201;
   }
+
+  static Future<bool> deleteProduct(int id) async {
+  final response = await ApiService.delete(
+    "/api/products/$id",
+  );
+
+  return response.statusCode == 200 ||
+      response.statusCode == 201;
+}
 }

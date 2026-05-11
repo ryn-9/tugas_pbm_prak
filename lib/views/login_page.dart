@@ -37,125 +37,163 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3E8FF),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                
-                const Text(
-                  "Welcome!",
-                  style: TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF6B4EFF),
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                const Text(
-                  "Login Terlebih Dahulu",
-                  style: TextStyle(color: Colors.grey),
-                ),
-
-                const SizedBox(height: 30),
-
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      
-                      TextField(
-                        controller: nimController,
-                        decoration: InputDecoration(
-                          hintText: "NIM",
-                          filled: true,
-                          fillColor: const Color(0xFFF8F5FF),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+      backgroundColor: const Color(0xFF8B5CF6),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 28,
+                right: 28,
+                top: 40,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Welcome!",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-
-                      const SizedBox(height: 16),
-
-                      
-                      TextField(
-                        controller: passwordController,
-                        obscureText: isObscure,
-                        decoration: InputDecoration(
-                          hintText: "Password",
-                          filled: true,
-                          fillColor: const Color(0xFFF8F5FF),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide: BorderSide.none,
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              isObscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                isObscure = !isObscure;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: isLoading ? null : handleLogin,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF8B5CF6),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          child: isLoading
-                              ? const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              : const Text(
-                                  "Login",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16),
-                                ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 10),
+
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Login terlebih dahulu untuk melanjutkan",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+
+          Expanded(
+            flex: 4,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(28),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(32),
+                  topRight: Radius.circular(32),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF4C3F91),
+                      ),
+                    ),
+
+                    const SizedBox(height: 28),
+
+                    TextField(
+                      controller: nimController,
+                      decoration: InputDecoration(
+                        hintText: "NIM",
+                        filled: true,
+                        fillColor: const Color(0xFFF8F5FF),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 18,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    TextField(
+                      controller: passwordController,
+                      obscureText: isObscure,
+                      decoration: InputDecoration(
+                        hintText: "Password",
+                        filled: true,
+                        fillColor: const Color(0xFFF8F5FF),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 18,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isObscure
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isObscure = !isObscure;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : handleLogin,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF8B5CF6),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
